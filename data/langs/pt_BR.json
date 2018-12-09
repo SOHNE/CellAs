@@ -1,0 +1,33 @@
+{
+  "system": [
+    "saindo {0:.0f}",
+    "Pausado",
+    "Sem conexão"
+  ],
+  "menu": [
+    "Jogar",
+    "Pontuações",
+    "Controles",
+    "Créditos",
+    "Sair"
+  ],
+  "score": [
+    "Nome",
+    "Pontos",
+    "Voltar",
+    "Atualizar"
+  ],
+  "gameplay": [
+    "Onda {0}",
+    "{0} Pontos",
+    "Novo recorde!"
+  ],
+  "end":[
+    "Fim do Jogo.",
+    "Você tentou, mas nada pode viver para sempre.",
+    "{0} Pontos",
+    "seu apelido",
+    "Sem conxão com o servidor",
+    "Pressione ENTER para enviar"
+  ]
+}

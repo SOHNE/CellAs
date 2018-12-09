@@ -1,0 +1,27 @@
+{
+  "controls": {
+    "_comment": "KeyCode. ex.: pause: 112 (pg.K_p)",
+    "pause": 112,
+    "exit": 27,
+    "sys_show": 286,
+    "accelerate": 119,
+    "decelerate": 115,
+    "left": 97,
+    "right": 100,
+    "shoot": 32
+  },
+  "exit_time": 4,
+  "fps": 60,
+  "info": false,
+  "lang": "SYS",
+  "sounds": false,
+  "volume": {
+    "_comment": "0 <= N <= 1",
+    "music": 0.2,
+    "sfx": 0.07
+  },
+  "server":{
+    "host": "127.0.0.1",
+    "port": 26969
+  }
+}

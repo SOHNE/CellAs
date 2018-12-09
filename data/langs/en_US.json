@@ -1,0 +1,30 @@
+{
+  "system": [
+    "exiting {0:.0f}",
+    "Paused",
+    "sending..."
+  ],
+  "menu": [
+    "Play",
+    "Scores",
+    "How to play?",
+    "Credits",
+    "Leave"
+  ],
+  "score": [
+    "Name",
+    "Points",
+    "Go Back"
+  ],
+  "gameplay": [
+    "Wave {0}"
+  ],
+  "end": [
+    "Game Over",
+    "You saved the organism!",
+    "You let the organism die...",
+    "Final score: {0}",
+    "your nickname",
+    "Press ENTER to send"
+  ]
+}
