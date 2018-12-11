@@ -96,7 +96,6 @@ class Gameplay(BaseState):
 
         # Definindo os sprites
         self.player = Jogador(self.resources)
-        self.organism = Organism()
         self.balas = pg.sprite.Group()
         self.all_sprites = pg.sprite.Group()
         self.RNA = pg.sprite.Group()
@@ -128,7 +127,7 @@ class Gameplay(BaseState):
 
         # Caso o jogador deixe de acelerar
         if event.type == pg.KEYUP and event.key == USER_CONFIG['controls']['accelerate']:
-            self.player.image = pg.transform.rotate(self.resources['image']['me'], -self.player.angle)
+            self.player.move('restore')
 
         # Para testes
         if event.type == pg.KEYDOWN and event.key == pg.K_e:
@@ -146,33 +145,39 @@ class Gameplay(BaseState):
         # Movimentação do personagem
         keys = pg.key.get_pressed()
         if keys[USER_CONFIG['controls']['left']]:
-            self.player.rotate(-4)
+            self.player.move(-4)
         if keys[USER_CONFIG['controls']['right']]:
-            self.player.rotate(4)
+            self.player.move(4)
         if keys[USER_CONFIG['controls']['accelerate']]:
-            self.player.velocidade += self.player.acceleration
-            # Imagem com o 'fogo'
-            self.player.image = pg.transform.rotate(self.resources['image']['acc'], -self.player.angle)
+            self.player.move(True)
         if keys[USER_CONFIG['controls']['decelerate']]:
-            self.player.velocidade -= self.player.acceleration
-            self.player.acc = False
+            self.player.move(False)
+
+        #
+        # COLISÃO
+        #
 
         # Colisão entre os sprites do arsenal e rnas
         contato_bala = pg.sprite.groupcollide(self.balas, self.RNA, True, False, pg.sprite.collide_mask)
         if contato_bala:
             for i in contato_bala.items():
                 self.player.attributes['SCORE'] += 1 if i[1][0].size != 1 else 10
-                i[1][0].divide(self.all_sprites, self.RNA, self.resources['image'])
+                i[1][0].divide(self.all_sprites, self.RNA, self.resources['image'], self.player.invencibilidade)
 
         # Colisão entre os sprites das células do organismo e os corpos estranhos, RNAs.
         contato_rna = pg.sprite.groupcollide(self.anti, self.RNA, False, False, pg.sprite.collide_mask)
         if contato_rna:
             for i in contato_rna:
+                self.player.attributes['SCORE'] -= 5 if self.player.attributes['SCORE'] >= 5 else 0
                 make_rnas(self.all_sprites, self.RNA, self.player.rect, self.resources['image'], pos=i.injuried(), total=1, size=1)
 
         # Colisão entre o jogador e os RNAs
-        if pg.sprite.spritecollide(self.player, self.RNA, False, pg.sprite.collide_mask):
-            self.player.hit()
+        contato = pg.sprite.spritecollide(self.player, self.RNA, False, pg.sprite.collide_mask)
+        if contato:
+            if not self.player.invencibilidade:
+                self.player.hit()
+            else:
+                contato[0].divide(self.all_sprites, self.RNA, self.resources['image'], self.player.invencibilidade)
 
         # Requisitando a maior pontuação registrada
         if not self.record:
@@ -181,7 +186,7 @@ class Gameplay(BaseState):
                 self.record = int(request[0]['score'])
 
     def draw(self, surface):
-        surface.blit( self.resources['image']['trab'], (0,0) )
+        surface.blit( self.resources['image']['gamepray'], (0,0) )
 
         # Atualizando e desenhando os sprites
         self.all_sprites.update()

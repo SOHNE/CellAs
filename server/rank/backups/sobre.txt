@@ -1,0 +1,1 @@
+﻿A cada inserção de dados, o csv antigo é copiado para esta pasta.

@@ -8,6 +8,8 @@ from lib.resources import *
 # Importando a matança
 from .arsenal import *
 
+import math
+
 __author__ = "Leandro Peres"
 __all__ = ['Jogador']
 
@@ -22,7 +24,6 @@ class Jogador(pg.sprite.Sprite):
 
         # Atribuindo o Vetor2D do pygame
         self.Vector = pg.math.Vector2
-
         self.image = self.resources['image']['me']
         self.image = pg.transform.scale(self.image, (70,70))
 
@@ -30,7 +31,7 @@ class Jogador(pg.sprite.Sprite):
         self.originalimage = self.image
 
         # Posição do jogador no centro da tela
-        self.posicao = self.Vector(WIDTH // 2, HEIGHT // 2)
+        self.posicao = self.Vector(WIDTH / 2, HEIGHT / 2)
 
         self.rect = self.image.get_rect(center=self.posicao)
         self.mask = pg.mask.from_surface(self.image)
@@ -45,6 +46,7 @@ class Jogador(pg.sprite.Sprite):
         self.acceleration = self.Vector(0, -0.085)
 
         self.angle = 0
+        self.acc = False
 
         self.attributes = {
             'HP': 3,
@@ -56,6 +58,10 @@ class Jogador(pg.sprite.Sprite):
         self.shootSFX = self.resources['sfx']['shot']
 
     def update(self):
+        # Acima da velocidade permitida?
+        if self.velocidade.length() > 5:
+            self.velocidade.scale_to_length(5)
+
         # Garante um jogador visível na janela
         if self.posicao.x > WIDTH:
             self.posicao.x = 0
@@ -66,55 +72,74 @@ class Jogador(pg.sprite.Sprite):
         elif self.posicao.y > HEIGHT:
             self.posicao.y = 0
 
-        # Acima da velocidade permitida?
-        if self.velocidade.length() > 5:
-            self.velocidade.scale_to_length(5)
-
         self.posicao += self.velocidade
         self.rect.center = self.posicao
 
-        # Efeito de blink
+        # Efeito de dano
         if self.invencibilidade:
-            self.contador_inv -= 2.25
 
             if self.contador_inv < 0:
+                # Retira a invencibilidade
                 self.invencibilidade = False
                 self.contador_inv = 445
-
-
-            # Efeito de transparência alternada
-            for _ in range(40):
-                if self.contador_inv <= _ * 35 and self.contador_inv > (_ - 1) * 35 and _ % 2 == 0:
-                    self.image.fill(CORES['Transparent'])
-                    break
-                else:
+                # Restaura a imagem padrão
+                if not self.acc:
                     self.image = pg.transform.rotate(self.originalimage, -self.angle)
-                    self.rect = self.image.get_rect(center=self.rect.center)
-                    self.mask = pg.mask.from_surface(self.image)
+                else:
+                    self.image = pg.transform.rotate(self.resources['image']['acc'], -self.angle)
+
+                self.rect = self.image.get_rect(center=self.rect.center)
+                self.mask = pg.mask.from_surface(self.image)
+            else:
+                if not self.acc:
+                    self.image = pg.transform.rotate(self.resources['image']['me_'], -self.angle)
+                else:
+                    self.image = pg.transform.rotate(self.resources['image']['acc_'], -self.angle)
+
+                self.rect = self.image.get_rect(center=self.rect.center)
+                self.mask = pg.mask.from_surface(self.image)
+
+            self.contador_inv -= 4.5
 
 
-    def rotate(self, graus):
+    def move(self, foward):
         r"""
-        Método para rotacionar o jogador.
+        Método da movimentação do jogador.
 
-        Params:
-            graus: int: Grau a ser adicionado
+        Args:
+            :foward: or bool or str or int: Acelerando ou desacelerando? Restaurar? Rotacionar?
         """
-        # Rotação condizente com o jogador
-        self.acceleration.rotate_ip(graus)
+        # Acelerar/Desacelerar
+        if type(foward) == bool:
+            if foward:
+                self.velocidade += self.acceleration
+                self.image = pg.transform.rotate(self.resources['image']['acc'], -self.angle)
+                self.acc = True
+            else:
+                self.velocidade -= self.acceleration
+                self.image = pg.transform.rotate(self.resources['image']['me'], -self.angle)
+                self.acc = False
 
-        self.angle += graus
+        # Restaurar
+        elif type(foward) == str:
+            self.image = pg.transform.rotate(self.resources['image']['me'], -self.angle)
+            self.acc = False
 
-        # E existe ângulo de 361 ou -5?
-        if self.angle > 360:
-            self.angle -= 360
-        elif self.angle < 0:
-            self.angle += 360
+        # Rotacionar
+        elif type(foward) == int:
+            # Adciona ao ângulo
+            self.angle += foward
 
-        # Reorganiza a imagem, retângulo e máscara
-        self.image = pg.transform.rotate(self.originalimage, -self.angle)
-        self.rect = self.image.get_rect(center=self.rect.center)
-        self.mask = pg.mask.from_surface(self.image)
+            # E existe ângulo de 361 ou -5?
+            self.angle %= 360
+
+            # Rotação da aceleração condizente com a direção do jogador
+            self.acceleration.rotate_ip(foward)
+
+            # Reorganiza a imagem, retângulo e máscara
+            self.image = pg.transform.rotate(self.originalimage, -self.angle)
+            self.mask = pg.mask.from_surface(self.image)
+            self.rect = self.image.get_rect(center=self.rect.center)
 
     def atira(self, all, group):
         r"""
@@ -124,27 +149,22 @@ class Jogador(pg.sprite.Sprite):
             all: all_spritess
             group: balas
         """
-        # Caso as configurações permitem,
-        # Setar o volume e dar play
-        if SOUNDS:
-            a = pg.mixer.Sound(self.shootSFX)
-            a.set_volume(VOLUME['sfx'])
-            pg.mixer.Sound.play(a)
+        if not self.invencibilidade:
+            # Caso as configurações permitem,
+            # Setar o volume e dar play
+            if SOUNDS:
+                a = pg.mixer.Sound(self.shootSFX)
+                a.set_volume(VOLUME['sfx'])
+                pg.mixer.Sound.play(a)
 
-        # Inicializa o tiro
-        bala = Bala(self.posicao, self.angle, self.originalShoot)
-        group.add(bala)
-        all.add(bala)
+            # Inicializa o tiro
+            bala = Bala(self.posicao, self.angle, self.originalShoot)
+            group.add(bala)
+            all.add(bala)
 
     def hit(self):
         r"""
         Método para corresponder o dano sofrido.
         """
-        if not self.invencibilidade:
-            self.invencibilidade = True
-            self.attributes['HP'] -= 1
-            # Reseta as condições físicas do jogador
-            self.velocidade = self.Vector(0, 0)
-            self.acceleration = self.Vector(0, -0.085)
-            self.posicao = self.Vector(WIDTH / 2, HEIGHT / 2)
-            self.angle = 0
+        self.invencibilidade = True
+        self.attributes['HP'] -= 1

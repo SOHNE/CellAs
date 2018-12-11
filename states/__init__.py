@@ -28,7 +28,7 @@ pg.mixer.init()
 # ou com o seu absoluto caminho absoluto
 resources = {
     'fonts': resources.load_all_fonts('data/fonts'),
-    'image': resources.load_all_gfx('data/image', ignore=['bg.png', 'trab.png', 'bg.jpg']),
+    'image': resources.load_all_gfx('data/image', ignore=['bg.png', 'gamepray.png', 'bg.jpg']),
     'music': resources.load_all_music('data/audio/music'),
     'sfx': resources.load_all_sfx('data/audio/sfx')
 }

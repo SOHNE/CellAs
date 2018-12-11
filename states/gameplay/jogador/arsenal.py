@@ -29,9 +29,6 @@ class Bala(pg.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
-        # Necessário para evitar algum vivo inútil
-        self.life = 0
-
         # Colisão Pixel Perfect
         self.mask = pg.mask.from_surface(self.image)
 

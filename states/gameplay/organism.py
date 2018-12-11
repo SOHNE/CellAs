@@ -5,7 +5,7 @@ from lib.config import *
 import random
 
 __author__ = "Leandro Peres"
-__all__ = ['Organism', 'Anticorps', 'make_anti']
+__all__ = ['Anticorps', 'make_anti']
 
 r"""
 A meu pai depois de morto
@@ -31,23 +31,6 @@ E a terra infecta que lhe cobre os rins!
 ANJOS, A. Eu e Outras Poesias. Rio de Janeiro: Civilização Brasileira, 1998.
 """
 
-class Organism(object):
-
-    def __init__(self):
-        r"""
-        Classe destinada inteiramente ao organismo.
-        Majoritariamente, apenas o indicador de sua vida.
-        No caso, perceptível pela cor de fundo da jogatina.
-        """
-        # Inicializa a vida do organismo.
-        self.life = 10
-
-    def update(self, surface):
-        if self.life == 10:
-            surface.fill(pg.Color("pink"))
-        else:
-            surface.fill(pg.Color("black"))
-
 class Anticorps(pg.sprite.Sprite):
 
     def __init__(self, resources):
@@ -62,7 +45,7 @@ class Anticorps(pg.sprite.Sprite):
 
         self.resources = resources
         
-        self.image = self.resources['b3']
+        self.image = self.resources['cell']
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(0, WIDTH), random.randint(0, HEIGHT))
         self.mask = pg.mask.from_surface(self.image)

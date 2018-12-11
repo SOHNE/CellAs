@@ -12,9 +12,9 @@
   },
   "exit_time": 4,
   "fps": 60,
-  "info": false,
+  "info": true,
   "lang": "SYS",
-  "sounds": false,
+  "sounds": true,
   "volume": {
     "_comment": "0 <= N <= 1",
     "music": 0.2,

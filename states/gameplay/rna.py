@@ -37,9 +37,8 @@ class RNA(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
 
-
         # Instancia a velocidade da célula
-        self.speed = 1
+        self.speed = random.randint(1,2)
 
         # Posição randômica
         temp_pos = self.rand_pos()
@@ -60,10 +59,11 @@ class RNA(pg.sprite.Sprite):
             self.rect.y = 0
 
         # Acerca da movimentação da célula
-        self.rect.x += (self.direction[0] + self.speed)
-        self.rect.y += (self.direction[1] + self.speed)
+        self.rect.x += self.direction[0]
+        self.rect.y += self.direction[1]
 
-    def divide(self, all, group, resources):
+
+    def divide(self, all, group, resources, player):
         r"""
         Método para divisão das células.
 
@@ -76,7 +76,7 @@ class RNA(pg.sprite.Sprite):
         temp = []
         pos = 5
         if self.size > 0:
-            __ = random.randint(1,2)
+            __ = random.randint(1,2 if not player else random.randint(3,4))
             for _ in range(__):
                 temp.append(RNA((self.rect.x + pos, self.rect.y + pos), self.size - 1, resources))
                 pos += 5
@@ -90,24 +90,24 @@ class RNA(pg.sprite.Sprite):
         """
 
         if random.choice([True, False]):
-            rand_x = random.random()
+            rand_x = self.speed + (random.random() * - random.choice([2,4]))
         else:
-            rand_x = random.random() * - random.choice([3,5]) - random.randint(0,2)
+            rand_x = self.speed + random.random()
 
         if random.choice([False, True]):
-            rand_y = random.random()
+            rand_y = self.speed + random.random()
         else:
-            rand_y = random.random() * - random.choice([3,5]) - random.randint(0,2)
+            rand_y = self.speed + (random.random() * - random.choice([1,3,5]))
 
         # Formata o ponto flutuante. Afinal, 10 casas decimais é demasiadamente desnecessário
-        rand_x = float("{:.5f}".format(rand_x))
-        rand_y = float("{:.5f}".format(rand_y))
+        rand_x = float("{:.3f}".format(rand_x))
+        rand_y = float("{:.3f}".format(rand_y))
 
         return [rand_x, rand_y]
 
 def safe_zone(position, player):
     r"""
-    Método que calcula distância entre o jogador e os RNA's.
+    Método que calcula distância entre o jogador e os RNA's, a distância entre dois pontos dados.
     Prevenindo, assim, a criação de inimigos na exata ou
     aproximada localização do jogador.
     sqrt(  (x1 - y1)^2 + (x2 - y2)^2  )
