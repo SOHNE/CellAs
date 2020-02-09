@@ -6,21 +6,18 @@ Dito isto, é válido informar que o jogo é inteiramente apoiado pelas mecânic
 
 [![Python Version](https://img.shields.io/badge/Python-3.7.1-green.svg?style=flat-square)](https://www.python.org/) [![Pygame Version](https://img.shields.io/badge/Pygame-1.9.4-green.svg?style=flat-square)](https://www.pygame.org/) [![Licença](https://img.shields.io/badge/Licença-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.pt-br.html)
 ___
-> 31
-> O verme se enconcha quando é chutado.  Essa é a sua astúcia.
-> Ele diminui com isso a probabilidade de ser novamente chutado.
-> Na língua da moral: humildade. 
-
-> Nietzsche, F. Crepúsculo dos ídolos
 
 ### Autores
 Dyego Marques Souza Costa
+
 <sup><sup>Criação dos recursos</sup></sup>
 
 Victoria Costa Oliveira
+
 <sup><sup>Documentação, Criação dos recursos</sup></sup>
 
 Leandro de Gonzaga Peres
+
 <sup><sup>Programação, Documentação</sup></sup>
 
 ## Instalação
