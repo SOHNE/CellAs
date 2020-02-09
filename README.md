@@ -32,8 +32,11 @@ Leandro de Gonzaga Peres
 
 ## Execução
 Verifique se o servidor está devidamente iniciado.
+
 <sup>Caso não, execute o *start_server.__bat/command/sh__*</sup>
+
 Após: ```python3 -B main.py```
+
 <sup>__-B__ para evitar que o interpretador CPython crie arquivos binários. Um fim puramente estético.</sup>
 
 ## Controles
