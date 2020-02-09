@@ -16,8 +16,10 @@ ___
 ### Autores
 Dyego Marques Souza Costa
 <sup><sup>Criação dos recursos</sup></sup>
+
 Victoria Costa Oliveira
 <sup><sup>Documentação, Criação dos recursos</sup></sup>
+
 Leandro de Gonzaga Peres
 <sup><sup>Programação, Documentação</sup></sup>
 
